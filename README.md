@@ -8,14 +8,20 @@ Install [Chord](https://github.com/keakon/chord):
 brew install keakon/tap/chord
 ```
 
+Install [chord-gateway](https://github.com/keakon/chord-gateway), the gateway that connects Chord to WeChat, Feishu, and other IM platforms:
+
+```bash
+brew install keakon/tap/chord-gateway
+```
+
 To upgrade:
 
 ```bash
 brew update
-brew upgrade chord
+brew upgrade chord chord-gateway
 ```
 
-The formula installs binaries from [Chord Releases](https://github.com/keakon/chord/releases) for macOS and Linux on arm64 and x86_64, without Go. Each platform's download URL is pinned to a specific version and verified with SHA256. Installation also generates Bash, Zsh, and Fish completions. The formula does not fall back to compiling from source.
+Each formula installs binaries from the project's GitHub Releases for macOS and Linux on arm64 and x86_64, without Go. Each platform's download URL is pinned to a specific version and verified with SHA256. Installation also generates Bash, Zsh, and Fish completions. The formula does not fall back to compiling from source.
 
 ## Publishing releases
 
@@ -40,11 +46,13 @@ Replace the tag with the stable version to publish. Retries reuse the existing r
 
 The formula is generated from `scripts/homebrew/chord.rb.erb` in the upstream repository. When changing installation or test logic, update both the template and this repository's formula so the next release preserves the changes, and validate the changes in the upstream repository. Documentation updates use regular pull requests.
 
+[chord-gateway](https://github.com/keakon/chord-gateway) follows the same flow from its own repository: pushing a `vX.Y.Z` tag there runs its `release.yml` and `homebrew.yml`, which validate and update `Formula/chord-gateway.rb` under the same rules, with the template and generator in its `scripts/` directory. The two repositories update independently; a concurrent update from the other project makes the push fail safely and the update can be retried.
+
 ## Initial setup
 
 Create the public GitHub repository `keakon/homebrew-tap` and push this project to its default branch `main`. Enable Actions in `keakon/chord`; this tap does not need Actions.
 
-In `keakon/chord`, set the Actions secret `HOMEBREW_TAP_TOKEN` to a fine-grained personal access token with Contents read/write access only to this repository. Pull requests permission is not required. The branch rules for `main` must allow this identity to push directly. Only the final publishing step uses this token; installation tests use read-only permissions.
+In `keakon/chord`, set the Actions secret `HOMEBREW_TAP_TOKEN` to a fine-grained personal access token with Contents read/write access only to this repository. Pull requests permission is not required. The branch rules for `main` must allow this identity to push directly. Only the final publishing step uses this token; installation tests use read-only permissions. Set the same secret in `keakon/chord-gateway`.
 
 Commit and push the upstream repository's `homebrew.yml`, generator script, and template before creating a release tag. For an existing release, run the update workflow manually after these files are available on the upstream repository's `main`.
 
@@ -54,6 +62,10 @@ Commit and push the upstream repository's `homebrew.yml`, generator script, and 
 brew install keakon/tap/chord
 brew test keakon/tap/chord
 brew audit --strict keakon/tap/chord
+
+brew install keakon/tap/chord-gateway
+brew test keakon/tap/chord-gateway
+brew audit --strict keakon/tap/chord-gateway
 ```
 
 In the upstream repository, test formula generation and updates:

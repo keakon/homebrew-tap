@@ -8,14 +8,20 @@
 brew install keakon/tap/chord
 ```
 
+安装 [chord-gateway](https://github.com/keakon/chord-gateway)（将 Chord 连接到微信、飞书等 IM 平台的网关）：
+
+```bash
+brew install keakon/tap/chord-gateway
+```
+
 升级：
 
 ```bash
 brew update
-brew upgrade chord
+brew upgrade chord chord-gateway
 ```
 
-配方直接安装 [Chord Release](https://github.com/keakon/chord/releases) 中的二进制包，支持 macOS 和 Linux 的 arm64、x86_64，无需 Go。每个平台的下载地址固定到具体版本，并校验 SHA256。安装时同时生成 Bash、Zsh 和 Fish 补全。配方不提供源码编译回退。
+每个配方直接安装对应项目 GitHub Release 中的二进制包，支持 macOS 和 Linux 的 arm64、x86_64，无需 Go。每个平台的下载地址固定到具体版本，并校验 SHA256。安装时同时生成 Bash、Zsh 和 Fish 补全。配方不提供源码编译回退。
 
 ## 发布版本
 
@@ -40,11 +46,13 @@ gh workflow run homebrew.yml --repo keakon/chord --ref main -f tag=v0.8.2
 
 配方由主仓库的 `scripts/homebrew/chord.rb.erb` 生成。修改安装或测试逻辑时，应更新该模板及本仓库配方，避免下次发布覆盖修改，并在主仓库验证这些变更。文档更新按普通 PR 合并。
 
+[chord-gateway](https://github.com/keakon/chord-gateway) 在自己的仓库中执行同样的流程：推送 `vX.Y.Z` tag 后运行其 `release.yml` 与 `homebrew.yml`，按相同规则验证并更新 `Formula/chord-gateway.rb`，模板和生成脚本位于其 `scripts/` 目录。两个仓库各自独立更新；另一项目并发更新时推送会安全失败，可单独重试。
+
 ## 首次启用
 
 创建公开 GitHub 仓库 `keakon/homebrew-tap`，将本项目放入默认分支 `main`。在 `keakon/chord` 启用 Actions；本仓库不需要 Actions。
 
-在 `keakon/chord` 配置 Actions secret `HOMEBREW_TAP_TOKEN`，使用只授权本仓库、拥有 Contents 读写权限的细粒度个人访问令牌，无需 Pull requests 权限。`main` 的分支规则必须允许该身份直接推送。此令牌只用于最后的提交步骤，安装测试使用只读权限。
+在 `keakon/chord` 配置 Actions secret `HOMEBREW_TAP_TOKEN`，使用只授权本仓库、拥有 Contents 读写权限的细粒度个人访问令牌，无需 Pull requests 权限。`main` 的分支规则必须允许该身份直接推送。此令牌只用于最后的提交步骤，安装测试使用只读权限。`keakon/chord-gateway` 也需要配置同样的 secret。
 
 创建发布 tag 前，需要先提交并推送主仓库的 `homebrew.yml`、生成脚本和模板。对于已有 Release，待这些文件进入主仓库远端 `main` 后，即可手动运行更新任务。
 
@@ -54,6 +62,10 @@ gh workflow run homebrew.yml --repo keakon/chord --ref main -f tag=v0.8.2
 brew install keakon/tap/chord
 brew test keakon/tap/chord
 brew audit --strict keakon/tap/chord
+
+brew install keakon/tap/chord-gateway
+brew test keakon/tap/chord-gateway
+brew audit --strict keakon/tap/chord-gateway
 ```
 
 在主仓库验证生成与更新逻辑：
