@@ -5,23 +5,23 @@ class Chord < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/keakon/chord/releases/download/v0.8.2/chord-v0.8.2-darwin-arm64.tar.gz"
-      sha256 "940eaed07697f43110009df12a049a1d7cb714c353dfd7a9e9a4926bb4514f5b"
+      url "https://github.com/keakon/chord/releases/download/v0.8.3/chord-v0.8.3-darwin-arm64.tar.gz"
+      sha256 "68616f159786144b6d31d5eff8d2588348e107ce49d8fdc69be4419c7d87f43e"
     end
     on_intel do
-      url "https://github.com/keakon/chord/releases/download/v0.8.2/chord-v0.8.2-darwin-amd64.tar.gz"
-      sha256 "94d2f85e0035f9af671562f9c0f3bb719fdc56cab2ddb22e3c650781890e0a92"
+      url "https://github.com/keakon/chord/releases/download/v0.8.3/chord-v0.8.3-darwin-amd64.tar.gz"
+      sha256 "342db17a819fb0bcb1b34585b99b7751181bcac95aa55c47321cafe72a825dff"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/keakon/chord/releases/download/v0.8.2/chord-v0.8.2-linux-arm64.tar.gz"
-      sha256 "7632f912dc19a13b79e7b3776f0da6dbc8948402758ed10f83a595c81cd82aa7"
+      url "https://github.com/keakon/chord/releases/download/v0.8.3/chord-v0.8.3-linux-arm64.tar.gz"
+      sha256 "f7e519e5f271a0aaaeefa5cc432b02c972d85739a33a8fb4129386a98d589670"
     end
     on_intel do
-      url "https://github.com/keakon/chord/releases/download/v0.8.2/chord-v0.8.2-linux-amd64.tar.gz"
-      sha256 "18c63d55eb42da9b6982d097a85eb7e3dffe038b081919acbe6b68ca2614b04c"
+      url "https://github.com/keakon/chord/releases/download/v0.8.3/chord-v0.8.3-linux-amd64.tar.gz"
+      sha256 "31b0959c5f276b94ef5e8e02b454766ab65706565e7992473e6c14e4102f3eb6"
     end
   end
 
