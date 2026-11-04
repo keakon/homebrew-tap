@@ -1,52 +1,54 @@
 # Chord Homebrew tap
 
-安装 [Chord](https://github.com/keakon/chord)：
+English | [简体中文](./README_CN.md)
+
+Install [Chord](https://github.com/keakon/chord):
 
 ```bash
 brew install keakon/tap/chord
 ```
 
-升级：
+To upgrade:
 
 ```bash
 brew update
 brew upgrade chord
 ```
 
-配方直接安装 [Chord Release](https://github.com/keakon/chord/releases) 中的二进制包，支持 macOS 和 Linux 的 arm64、x86_64，无需 Go。每个平台的下载地址固定到具体版本，并校验 SHA256。安装时同时生成 Bash、Zsh 和 Fish 补全。配方不提供源码编译回退。
+The formula installs binaries from [Chord Releases](https://github.com/keakon/chord/releases) for macOS and Linux on arm64 and x86_64, without Go. Each platform's download URL is pinned to a specific version and verified with SHA256. Installation also generates Bash, Zsh, and Fish completions. The formula does not fall back to compiling from source.
 
-## 发布版本
+## Publishing releases
 
-版本 tag 在 `keakon/chord` 中维护。本仓库只需维护 `main`，不创建每版本分支、tag 或 Release。
+Version tags are maintained in `keakon/chord`. This repository uses `main` and does not create branches, tags, or releases for individual versions.
 
-主仓库推送 `vX.Y.Z` tag 后，`release.yml` 构建并上传安装包，成功后调用 `homebrew.yml`：
+Pushing a `vX.Y.Z` tag to the upstream repository runs `release.yml` to build and upload the archives. Once that succeeds, it calls `homebrew.yml` to:
 
-1. 确认是最新正式 Release，且版本高于 tap 当前版本；首次添加配方也允许。
-2. 从 Release 的 `SHA256SUMS` 生成配方。
-3. 在 macOS ARM64、Intel 和 Linux ARM64、x86_64 上运行 Homebrew 安装、测试及 audit。
-4. 全部通过后，再次确认 Release 和配方一致，直接提交到本仓库的 `main`。
+1. Confirm that this is the latest stable release and is newer than the tap's current version. Adding the formula for the first time is also supported.
+2. Generate the formula from the release's `SHA256SUMS`.
+3. Run Homebrew installation, tests, and audit on macOS ARM64 and Intel, and Linux ARM64 and x86_64.
+4. After all checks pass, verify that the release and formula still match, then commit directly to this repository's `main`.
 
-普通提交只运行 CI。草稿、预发布、旧版本及已更新的版本不会更新 tap。本仓库的 CI 只验证配方，不构建或发布 bottle。
+Regular commits only run CI. Drafts, prereleases, older releases, and versions already present in the tap do not update it. This repository's CI validates the formula without building or publishing bottles.
 
-更新失败后，可以在主仓库单独重试：
+If an update fails, retry it separately in the upstream repository:
 
 ```bash
 gh workflow run homebrew.yml --repo keakon/chord --ref main -f tag=v0.8.2
 ```
 
-将 tag 替换为待更新的正式版本。重试复用已有 Release，不重建发布包。验证失败时 tap 保持原版本；推送遇到并发更新会失败，不会强制覆盖 `main`。
+Replace the tag with the stable version to publish. Retries reuse the existing release without rebuilding its archives. Validation failures leave the tap at its current version. A push that conflicts with a concurrent update fails without overwriting `main`.
 
-配方由主仓库的 `scripts/homebrew/chord.rb.erb` 生成。修改安装或测试逻辑时，应更新该模板及本仓库配方，避免下次发布覆盖修改。文档、CI 和 Dependabot 更新按普通 PR 合并。
+The formula is generated from `scripts/homebrew/chord.rb.erb` in the upstream repository. When changing installation or test logic, update both the template and this repository's formula so the next release preserves the changes. Documentation, CI, and Dependabot updates use regular pull requests.
 
-## 首次启用
+## Initial setup
 
-创建公开 GitHub 仓库 `keakon/homebrew-tap`，将本项目放入默认分支 `main`，允许 Actions 运行。
+Create the public GitHub repository `keakon/homebrew-tap`, push this project to its default branch `main`, and enable Actions.
 
-在 `keakon/chord` 配置 Actions secret `HOMEBREW_TAP_TOKEN`，使用只授权本仓库、拥有 Contents 读写权限的细粒度个人访问令牌，无需 Pull requests 权限。`main` 的分支规则必须允许该身份直接推送。此令牌只用于最后的提交步骤，安装测试使用只读权限。
+In `keakon/chord`, set the Actions secret `HOMEBREW_TAP_TOKEN` to a fine-grained personal access token with Contents read/write access only to this repository. Pull requests permission is not required. The branch rules for `main` must allow this identity to push directly. Only the final publishing step uses this token; installation tests use read-only permissions.
 
-主仓库的 `homebrew.yml`、生成脚本和模板需要随发布代码一同提交。已有 Release 可从主仓库 `main` 手动运行更新任务。
+Commit the upstream repository's `homebrew.yml`, generator script, and template with the release code. For an existing release, run the update workflow manually from the upstream repository's `main`.
 
-## 本地验证
+## Local validation
 
 ```bash
 brew install keakon/tap/chord
@@ -54,10 +56,10 @@ brew test keakon/tap/chord
 brew audit --strict keakon/tap/chord
 ```
 
-在主仓库验证生成与更新逻辑：
+In the upstream repository, test formula generation and updates:
 
 ```bash
 ruby scripts/test_homebrew.rb
 ```
 
-本地验证只覆盖当前平台，四个平台的完整结果以 CI 为准。
+Local validation covers only the current platform. Check CI for results on all four platforms.
